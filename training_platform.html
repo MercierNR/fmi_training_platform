@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FMI Professional Development Training Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+            position: relative;
+        }
+
+        .header::before {
+            content: '⚙️';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3rem;
+            opacity: 0.3;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .header .subtitle {
+            font-size: 1rem;
+            opacity: 0.7;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .section {
+            margin-bottom: 35px;
+            padding: 30px;
+            border-left: 5px solid #3498db;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            position: relative;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .section::before {
+            content: attr(data-icon);
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 1.5rem;
+            opacity: 0.3;
+        }
+
+        .section h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h3::before {
+            content: attr(data-emoji);
+            font-size: 1.2rem;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #34495e;
+            font-size: 0.95rem;
+        }
+
+        select, input[type="text"], textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+            font-family: inherit;
+        }
+
+        select:focus, input[type="text"]:focus, textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            border: none;
+            padding: 18px 45px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(52, 152, 219, 0.4);
+            background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            border: 1px solid rgba(52, 152, 219, 0.1);
+        }
+
+        .metric-option {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
+
+        .metric-option:hover {
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+
+        .metric-option input[type="checkbox"] {
+            margin-right: 12px;
+            width: 18px;
+            height: 18px;
+            accent-color: #3498db;
+            cursor: pointer;
+        }
+
+        .metric-option label {
+            margin-bottom: 0;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .generated-prompt {
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .generated-prompt h4 {
+            color: #ecf0f1;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .generated-prompt h4::before {
+            content: '📋';
+        }
+
+        .generated-prompt pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 13px;
+            line-height: 1.5;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+
+        #totalHoursDisplay {
+            font-size: 1.1em;
+            font-weight: 600;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Professional Development Training Platform</h1>
+            <p>AI-Powered Personalized Learning for Mechanical Engineers</p>
+            <div class="subtitle">Fluid Metering Inc. - Engineering Excellence Initiative</div>
+        </div>
+
+        <div class="form-container">
+            <form id="trainingForm">
+                <!-- Learning Topic -->
+                <div class="section" data-emoji="🎯">
+                    <h3 data-emoji="🎯">Learning Focus</h3>
+                    <div class="form-group">
+                        <label for="topic">Select Your Learning Topic:</label>
+                        <select id="topic" required>
+                            <option value="">Choose a topic...</option>
+                            <option value="Advanced Manufacturing Processes">Advanced Manufacturing Processes</option>
+                            <option value="Stepper Motor Systems and Control">Stepper Motor Systems and Control</option>
+                            <option value="Verification and Validation (V&V) for Medical Devices">Verification and Validation (V&V) for Medical Devices</option>
+                            <option value="Advanced Geometric Dimensioning and Tolerancing (GD&T)">Advanced GD&T</option>
+                            <option value="Fluid Systems and Pump Design">Fluid Systems and Pump Design</option>
+                            <option value="Materials Science for Product Development">Materials Science for Product Development</option>
+                            <option value="custom">Custom Topic (specify below)</option>
+                        </select>
+                    </div>
+                    <div class="form-group hidden" id="customTopicGroup">
+                        <label for="customTopic">Custom Topic:</label>
+                        <input type="text" id="customTopic" placeholder="Enter your custom learning topic">
+                    </div>
+                </div>
+
+                <!-- Role Specialization -->
+                <div class="section" data-emoji="⚙️">
+                    <h3 data-emoji="⚙️">Role Specialization</h3>
+                    <div class="form-group">
+                        <label>Additional Role Specializations (Optional - Select multiple):</label>
+                        <div class="checkbox-group">
+                            <div class="metric-option">
+                                <input type="checkbox" id="role1" value="with expertise in medical device validation and regulatory compliance">
+                                <label for="role1">Medical Device Validation & Regulatory</label>
+                            </div>
+                            <div class="metric-option">
+                                <input type="checkbox" id="role2" value="specializing in precision machining and tight tolerance design">
+                                <label for="role2">Precision Machining & Tolerances</label>
+                            </div>
+                            <div class="metric-option">
+                                <input type="checkbox" id="role3" value="with deep knowledge of fluid systems and positive displacement pumps">
+                                <label for="role3">Fluid Systems & Pumps</label>
+                            </div>
+                            <div class="metric-option">
+                                <input type="checkbox" id="role4" value="focusing on manufacturing process optimization and DFM">
+                                <label for="role4">Manufacturing Process & DFM</label>
+                            </div>
+                            <div class="metric-option">
+                                <input type="checkbox" id="role5" value="with extensive experience in geometric dimensioning and tolerancing">
+                                <label for="role5">GD&T Expert</label>
+                            </div>
+                            <div class="metric-option">
+                                <input type="checkbox" id="role6" value="specializing in materials selection and failure analysis">
+                                <label for="role6">Materials & Failure Analysis</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="customRole">Custom Role Specialization (Optional):</label>
+                        <input type="text" id="customRole" placeholder="Add any additional role specializations">
+                    </div>
+                </div>
+
+                <!-- Learning Challenges -->
+                <div class="section" data-emoji="📐">
+                    <h3 data-emoji="📐">Learning Profile</h3>
+                    <div class="form-group">
+                        <label>Learning Challenges (Select all that apply):</label>
+                        <div class="checkbox-group">
+                            <div class="metric-option">
+                                <input type="checkbox" id="challenge1" value="material retention and need frequent reinforcement">
+                                <label for="challenge1">Material Retention</label>
+                            </div>
+                            <div class="metric-option">
+                                <input type="checkbox" id="challenge2" value="connecting theoretical concepts to practical applications">
+                                <label for="challenge2">Theory to Practice Connection</label>
+                            </div>
+                            <div class="metric-option">
+                                <input type="checkbox" id="challenge3" value="retaining complex technical standards and specifications">
+                                <label for="challenge3">Technical Standards Retention</label>
+                            </div>
+                            <div class="metric-option">
+                                <input type="checkbox" id="challenge4" value="visualizing 3D relationships and spatial concepts">
+                                <label for="challenge4">3D Visualization</label>
+                            </div>
+                            <div class="metric-option">
+                                <input type="checkbox" id="challenge5" value="remembering formulas and calculation procedures">
+                                <label for="challenge5">Formulas & Calculations</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="customChallenge">Additional Learning Challenges (Optional):</label>
+                        <input type="text" id="customChallenge" placeholder="Describe any additional learning challenges">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Learning Motivation (Select all that apply):</label>
+                        <div class="checkbox-group">
+                            <div class="metric-option">
+                                <input type="checkbox" id="motivation1" value="I am a mechanical engineer in product development seeking to advance my technical expertise for career growth">
+                                <label for="motivation1">Career Advancement</label>
+                            </div>
+                            <div class="metric-option">
+                                <input type="checkbox" id="motivation2" value="My current role requires deeper knowledge in this area to effectively contribute to product design decisions">
+                                <label for="motivation2">Current Role Requirements</label>
+                            </div>
+                            <div class="metric-option">
+                                <input type="checkbox" id="motivation3" value="I want to become the subject matter expert on my team in this technical area">
+                                <label for="motivation3">Become Team SME</label>
+                            </div>
+                            <div class="metric-option">
+                                <input type="checkbox" id="motivation4" value="This knowledge is critical for an upcoming project I'm leading">
+                                <label for="motivation4">Upcoming Project</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="customMotivation">Additional Motivation (Optional):</label>
+                        <input type="text" id="customMotivation" placeholder="Describe any additional learning motivation">
+                    </div>
+                </div>
+
+                <!-- Learning Preferences -->
+                <div class="section" data-emoji="🔧">
+                    <h3 data-emoji="🔧">Learning Style</h3>
+                    <div class="grid">
+                        <div class="form-group">
+                            <label for="learningStyle">Learning Style Preference:</label>
+                            <select id="learningStyle" required>
+                                <option value="">Choose your style...</option>
+                                <option value="provide information in small, digestible chunks with frequent practice opportunities">Small Chunks + Practice</option>
+                                <option value="use visual aids, diagrams, and real-world examples to illustrate concepts">Visual + Examples</option>
+                                <option value="focus on hands-on problem-solving rather than theoretical explanations">Hands-on Problem Solving</option>
+                                <option value="connect all new concepts to practical engineering applications">Practical Applications</option>
+                                <option value="custom">Custom Style</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="contentDelivery">Content Delivery Method:</label>
+                            <select id="contentDelivery" required>
+                                <option value="">Choose delivery method...</option>
+                                <option value="short paragraphs with clear headers and bullet points when appropriate">Structured Paragraphs</option>
+                                <option value="step-by-step procedures with accompanying explanations">Step-by-step Procedures</option>
+                                <option value="case studies and real-world scenarios">Case Studies & Scenarios</option>
+                                <option value="interactive problem-solving sessions">Interactive Problem Solving</option>
+                                <option value="custom">Custom Method</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Training Parameters -->
+                <div class="section" data-emoji="📊">
+                    <h3 data-emoji="📊">Training Schedule</h3>
+                    <p style="margin-bottom: 15px; color: #666;">Course must be completed within 3 months (quarterly training requirement). Total hours will be calculated automatically.</p>
+                    <div class="grid">
+                        <div class="form-group">
+                            <label for="sessionLength">Session Length:</label>
+                            <select id="sessionLength" required>
+                                <option value="">Choose session length...</option>
+                                <option value="30 minutes">30 minutes</option>
+                                <option value="45 minutes">45 minutes</option>
+                                <option value="60 minutes">60 minutes</option>
+                                <option value="90 minutes">90 minutes</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="frequency">Session Frequency:</label>
+                            <select id="frequency" required>
+                                <option value="">Choose frequency...</option>
+                                <option value="once weekly" data-sessions="12">Once weekly (12 sessions)</option>
+                                <option value="twice weekly" data-sessions="24">Twice weekly (24 sessions)</option>
+                                <option value="three times weekly" data-sessions="36">3x weekly (36 sessions)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Calculated Total Hours:</label>
+                            <div id="totalHoursDisplay" style="font-size: 1.2em; font-weight: bold; color: #667eea; padding: 10px; background: #f8f9ff; border-radius: 4px; text-align: center;">
+                                Select session length and frequency above
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Tracking -->
+                <div class="section" data-emoji="📈">
+                    <h3 data-emoji="📈">Progress Tracking</h3>
+                    <p style="margin-bottom: 15px; color: #666;">Quiz scores and session completion are automatically tracked. Select additional metrics:</p>
+                    <div class="grid">
+                        <div>
+                            <div class="metric-option">
+                                <input type="checkbox" id="timePerConcept" value="Time spent per concept/session">
+                                <label for="timePerConcept">Time per concept/session</label>
+                            </div>
+                            <div class="metric-option">
+                                <input type="checkbox" id="quizAttempts" value="Number of attempts per quiz question">
+                                <label for="quizAttempts">Quiz attempts per question</label>
+                            </div>
+                            <div class="metric-option">
+                                <input type="checkbox" id="reinforcement" value="Topics requiring reinforcement/review">
+                                <label for="reinforcement">Topics needing reinforcement</label>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="metric-option">
+                                <input type="checkbox" id="trajectory" value="Improvement trajectory over time">
+                                <label for="trajectory">Improvement trajectory</label>
+                            </div>
+                            <div class="metric-option">
+                                <input type="checkbox" id="mastery" value="Concept mastery levels">
+                                <label for="mastery">Concept mastery levels</label>
+                            </div>
+                            <div class="metric-option">
+                                <input type="checkbox" id="retention" value="Retention rates on pop quiz material">
+                                <label for="retention">Pop quiz retention rates</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <button type="submit" class="btn-primary">🔧 Generate Training Course Prompt</button>
+                </div>
+            </form>
+
+            <div id="generatedPrompt" class="generated-prompt hidden">
+                <h4>Generated Training Prompt:</h4>
+                <pre id="promptText"></pre>
+                <div style="margin-top: 20px; text-align: center;">
+                    <button type="button" class="btn-primary" onclick="copyPrompt()">📋 Copy Prompt to Clipboard</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Calculate total hours based on session length and frequency
+        function updateTotalHours() {
+            const sessionLength = document.getElementById('sessionLength').value;
+            const frequency = document.getElementById('frequency').value;
+            const frequencySelect = document.getElementById('frequency');
+            const selectedOption = frequencySelect.options[frequencySelect.selectedIndex];
+            
+            if (sessionLength && frequency) {
+                const sessionMinutes = parseInt(sessionLength);
+                const totalSessions = parseInt(selectedOption.dataset.sessions);
+                const totalMinutes = sessionMinutes * totalSessions;
+                const totalHours = totalMinutes / 60;
+                
+                let displayText = `${totalHours} hours total`;
+                if (totalHours < 12) {
+                    displayText += ` ⚠️ Below minimum (12 hrs)`;
+                    document.getElementById('totalHoursDisplay').style.color = '#dc3545';
+                    document.getElementById('totalHoursDisplay').style.background = '#f8d7da';
+                } else if (totalHours > 24) {
+                    displayText += ` ⚠️ Above maximum (24 hrs)`;
+                    document.getElementById('totalHoursDisplay').style.color = '#dc3545';
+                    document.getElementById('totalHoursDisplay').style.background = '#f8d7da';
+                } else {
+                    displayText += ` ✅ Within range (12-24 hrs)`;
+                    document.getElementById('totalHoursDisplay').style.color = '#28a745';
+                    document.getElementById('totalHoursDisplay').style.background = '#d4edda';
+                }
+                
+                document.getElementById('totalHoursDisplay').textContent = displayText;
+            } else {
+                document.getElementById('totalHoursDisplay').textContent = 'Select session length and frequency above';
+                document.getElementById('totalHoursDisplay').style.color = '#667eea';
+                document.getElementById('totalHoursDisplay').style.background = '#f8f9ff';
+            }
+        }
+
+        document.getElementById('sessionLength').addEventListener('change', updateTotalHours);
+        document.getElementById('frequency').addEventListener('change', updateTotalHours);
+
+        // Show/hide custom input fields
+        document.getElementById('topic').addEventListener('change', function() {
+            const customGroup = document.getElementById('customTopicGroup');
+            if (this.value === 'custom') {
+                customGroup.classList.remove('hidden');
+                document.getElementById('customTopic').required = true;
+            } else {
+                customGroup.classList.add('hidden');
+                document.getElementById('customTopic').required = false;
+            }
+        });
+
+        // Remove the old role, challenge, motivation event listeners as they're now checkboxes
+
+        // Form submission
+        document.getElementById('trainingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            generatePrompt();
+        });
+
+        function generatePrompt() {
+            const form = document.getElementById('trainingForm');
+            
+            // Get topic
+            let topic = document.getElementById('topic').value;
+            if (topic === 'custom') {
+                topic = document.getElementById('customTopic').value;
+            }
+
+            // Get role specializations (multiple selections)
+            const roleSpecs = [];
+            document.querySelectorAll('input[id^="role"]:checked').forEach(checkbox => {
+                roleSpecs.push(checkbox.value);
+            });
+            const customRole = document.getElementById('customRole').value.trim();
+            if (customRole) {
+                roleSpecs.push(customRole);
+            }
+            const roleSpecText = roleSpecs.length > 0 ? roleSpecs.join(', ') : '';
+
+            // Get challenges (multiple selections)
+            const challenges = [];
+            document.querySelectorAll('input[id^="challenge"]:checked').forEach(checkbox => {
+                challenges.push(checkbox.value);
+            });
+            const customChallenge = document.getElementById('customChallenge').value.trim();
+            if (customChallenge) {
+                challenges.push(customChallenge);
+            }
+            const challengeText = challenges.length > 0 ? challenges.join(', ') : 'general learning challenges';
+
+            // Get motivations (multiple selections)
+            const motivations = [];
+            document.querySelectorAll('input[id^="motivation"]:checked').forEach(checkbox => {
+                motivations.push(checkbox.value);
+            });
+            const customMotivation = document.getElementById('customMotivation').value.trim();
+            if (customMotivation) {
+                motivations.push(customMotivation);
+            }
+            const motivationText = motivations.length > 0 ? motivations.join('. Additionally, ') : 'I want to expand my technical knowledge';
+
+            // Get learning style and content delivery
+            const learningStyle = document.getElementById('learningStyle').value;
+            const contentDelivery = document.getElementById('contentDelivery').value;
+
+            // Calculate total hours
+            const sessionLength = document.getElementById('sessionLength').value;
+            const frequency = document.getElementById('frequency').value;
+            const frequencySelect = document.getElementById('frequency');
+            const selectedOption = frequencySelect.options[frequencySelect.selectedIndex];
+            const sessionMinutes = parseInt(sessionLength);
+            const totalSessions = parseInt(selectedOption.dataset.sessions);
+            const totalHours = sessionMinutes * totalSessions / 60;
+
+            // Get selected metrics
+            const metrics = [];
+            document.querySelectorAll('.section:last-of-type input[type="checkbox"]:checked').forEach(checkbox => {
+                metrics.push(checkbox.value);
+            });
+
+            // Generate the prompt
+            const prompt = `# Professional Development AI Training
+
+## Role Definition
+You are my **Lead Product Development Engineer with extensive design-to-manufacturing experience** ${roleSpecText ? roleSpecText : ''}. You guide my learning through practical application, real-world scenarios, and hands-on problem solving rather than simply providing information. I tend to struggle with **${challengeText}**, so please help me recognize and overcome these challenges as we go. 
+
+I'm pursuing this training because **${motivationText}**. When sharing information, please **${learningStyle}**. Use **${contentDelivery}** and include frequent quizzes, periodic recaps, and hands-on design challenges to help me retain and apply knowledge.
+
+## Training Parameters
+- **Total Duration:** 3 months
+- **Total Hours:** ${totalHours} hours
+- **Session Length:** ${sessionLength}
+- **Session Frequency:** ${frequency}
+- **Learning Topic:** ${topic}
+
+## Learning Approach
+Each session should build progressively on previous knowledge. Use minimal multiple choice questions - prioritize short answer responses, problem-solving scenarios, design challenges, and real-world application exercises. Integrate authoritative source citations throughout content delivery. When possible, relate examples to small rotating-reciprocating piston pumps and life science applications, but also draw from broader mechanical engineering contexts.
+
+## Initial Assessment & Course Customization
+
+### Step 1: Diagnostic Assessment
+Begin with a comprehensive diagnostic assessment broken into logical sub-areas of the chosen topic. This assessment should identify specific knowledge gaps and strengths, not serve as pass/fail evaluation. The assessment should be challenging enough that mastery isn't expected - we're mapping learning opportunities.
+
+### Step 2: Topic Selection
+Based on assessment results, generate a high-level list of focus areas where gaps were identified. Ask me to select 2 or more priority topics from this list. If I'm not satisfied with the options, search for additional relevant topics.
+
+### Step 3: Course Outline Approval
+Create a high-level course outline with timeline view showing the selected topics and estimated session distribution. Present this for approval before proceeding. The outline should remain flexible to allow for adaptive session modifications based on performance.
+
+## Adaptive Learning
+Monitor my progress continuously and adapt remaining sessions based on performance:
+- After each quiz, walk through all problems with detailed explanations, spending extra time on incorrect answers to ensure understanding of the "why"
+- Use patterns from quiz mistakes to adapt future lesson content and emphasize weak areas
+- If I consistently struggle with specific concepts, increase focus and provide additional reinforcement in subsequent sessions
+- Include random "pop quizzes" on previously covered material throughout the course
+- The goal is learning and understanding, not simply achieving passing grades
+
+## Progress Tracking - Mandatory Metrics
+Track the following for all users:
+- Quiz scores and performance trends
+- Session completion rates
+${metrics.length > 0 ? '- ' + metrics.join('\n- ') : ''}
+
+## Assessment Methods
+- **Diagnostic Sub-Area Assessments:** Break initial assessment into logical components
+- **Session Quizzes:** Short answer and application-based questions
+- **Design Challenges:** Real-world problem solving exercises
+- **Pop Quizzes:** Random review of previous material
+- **Self-Reflection Sessions:** Weekly dialogue and brainstorming sessions to solidify learning and identify gaps
+- **Final Comprehensive Assessment:** End-of-course evaluation covering all key concepts
+
+## Content Standards
+Prioritize authoritative engineering sources in this hierarchy:
+1. ASME standards and technical specifications
+2. Machinery's Handbook and established engineering references
+3. Peer-reviewed technical publications
+4. Reputable technical organizations and institutions
+
+Always cite sources within content delivery. Avoid blog posts, social media, and non-authoritative sources.
+
+## Session Structure
+- **Opening:** Brief review of previous session key points
+- **Core Content:** New material with integrated examples and citations
+- **Application:** Problem-solving exercise or design challenge
+- **Assessment:** Quiz or knowledge check
+- **Preview:** Brief overview of next session topics
+
+Begin the training program with the diagnostic assessment for **${topic}**.`;
+
+            // Display the generated prompt
+            document.getElementById('promptText').textContent = prompt;
+            document.getElementById('generatedPrompt').classList.remove('hidden');
+            
+            // Scroll to the prompt
+            document.getElementById('generatedPrompt').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function copyPrompt() {
+            const promptText = document.getElementById('promptText').textContent;
+            navigator.clipboard.writeText(promptText).then(function() {
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = '✅ Copied!';
+                button.style.background = '#28a745';
+                
+                setTimeout(function() {
+                    button.textContent = originalText;
+                    button.style.background = '';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
