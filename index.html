@@ -70,39 +70,13 @@
             font-size: 1.3rem;
             opacity: 0.9;
             font-weight: 300;
-            margin-bottom: 10px;
         }
 
         .header .subtitle {
-            font-size: 1.1rem;
-            opacity: 0.85;
-            margin-bottom: 15px;
-            font-weight: 400;
-        }
-
-        .header .company-info {
             font-size: 1rem;
             opacity: 0.7;
+            margin-top: 10px;
             font-style: italic;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            margin-top: 20px;
-        }
-
-        .fmi-logo {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #4a9eff 0%, #0066cc 100%);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
         .form-container {
@@ -169,19 +143,6 @@
             transition: all 0.3s ease;
             background: white;
             font-family: inherit;
-        }
-
-        #topic {
-            height: auto;
-            min-height: 60px;
-            line-height: 1.4;
-        }
-
-        #topic option {
-            padding: 8px;
-            line-height: 1.4;
-            white-space: normal;
-            height: auto;
         }
 
         select:focus, input[type="text"]:focus, textarea:focus {
@@ -311,13 +272,9 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>FMI Product Development Training Platform</h1>
+            <h1>Professional Development Training Platform</h1>
             <p>AI-Powered Personalized Learning for Mechanical Engineers</p>
-            <div class="subtitle">Generate Custom Developmental Plans with the Help of AI</div>
-            <div class="company-info">
-                <div class="fmi-logo">F</div>
-                <span>Fluid Metering Inc. - Engineering Excellence Initiative</span>
-            </div>
+            <div class="subtitle">Fluid Metering Inc. - Engineering Excellence Initiative</div>
         </div>
 
         <div class="form-container">
@@ -329,10 +286,10 @@
                         <label for="topic">Select Your Learning Topic:</label>
                         <select id="topic" required>
                             <option value="">Choose a topic...</option>
-                            <option value="Better understand all the different manufacturing processes, strengths and weaknesses, pros and cons, achievable tolerances, use cases for each. I have a pretty solid knowledge base already, so the training should be focused on gaps, and likely will get into granular topics.">Advanced Manufacturing Processes - Better understand all the different manufacturing processes, strengths and weaknesses, pros and cons, achievable tolerances, use cases for each. I have a pretty solid knowledge base already, so the training should be focused on gaps, and likely will get into granular topics.</option>
-                            <option value="Better understand stepper motors. I use them daily at work, and have some understanding of their working principles, but could use a deeper understanding.">Stepper Motor Systems and Control - Better understand stepper motors. I use them daily at work, and have some understanding of their working principles, but could use a deeper understanding.</option>
-                            <option value="Learn all about the standard VnV process typically used for products in the medical and life science fields, such as small positive displacement pumps inside medical devices. I want to learn about the process, documentation, and workflows.">Verification and Validation (V&V) for Medical Devices - Learn all about the standard VnV process typically used for products in the medical and life science fields, such as small positive displacement pumps inside medical devices. I want to learn about the process, documentation, and workflows.</option>
-                            <option value="Become a master of GD&T. I already use it daily, but want to dive deeper into each feature, use case, better understand when and how to use it when designing a part. All standards should be pulled from ANSY Y14.5-2009 or later, any of the other relevant ANSY standards (info should not come from blog postings), and the Machinery's Handbook.">Advanced Geometric Dimensioning and Tolerancing (GD&T) - Become a master of GD&T. I already use it daily, but want to dive deeper into each feature, use case, better understand when and how to use it when designing a part. All standards should be pulled from ANSY Y14.5-2009 or later, any of the other relevant ANSY standards (info should not come from blog postings), and the Machinery's Handbook.</option>
+                            <option value="Advanced Manufacturing Processes">Advanced Manufacturing Processes</option>
+                            <option value="Stepper Motor Systems and Control">Stepper Motor Systems and Control</option>
+                            <option value="Verification and Validation (V&V) for Medical Devices">Verification and Validation (V&V) for Medical Devices</option>
+                            <option value="Advanced Geometric Dimensioning and Tolerancing (GD&T)">Advanced GD&T</option>
                             <option value="Fluid Systems and Pump Design">Fluid Systems and Pump Design</option>
                             <option value="Materials Science for Product Development">Materials Science for Product Development</option>
                             <option value="custom">Custom Topic (specify below)</option>
@@ -556,28 +513,8 @@
     </div>
 
     <script>
-        // Topic preview functionality and custom topic handling
-        document.getElementById('topic').addEventListener('change', function() {
-            const customGroup = document.getElementById('customTopicGroup');
-            const topicPreview = document.getElementById('topicPreview');
-            
-            if (this.value === 'custom') {
-                customGroup.classList.remove('hidden');
-                document.getElementById('customTopic').required = true;
-                topicPreview.classList.remove('show');
-            } else {
-                customGroup.classList.add('hidden');
-                document.getElementById('customTopic').required = false;
-                
-                // Show topic description
-                if (this.value && this.value !== '') {
-                    topicPreview.textContent = this.value;
-                    topicPreview.classList.add('show');
-                } else {
-                    topicPreview.classList.remove('show');
-                }
-            }
-        });
+        // Calculate total hours based on session length and frequency
+        function updateTotalHours() {
             const sessionLength = document.getElementById('sessionLength').value;
             const frequency = document.getElementById('frequency').value;
             const frequencySelect = document.getElementById('frequency');
@@ -626,32 +563,6 @@
                 document.getElementById('customTopic').required = false;
             }
         });
-
-        // Topic preview functionality
-        document.getElementById('topic').addEventListener('change', function() {
-            const customGroup = document.getElementById('customTopicGroup');
-            const topicPreview = document.getElementById('topicPreview');
-            
-            if (this.value === 'custom') {
-                customGroup.classList.remove('hidden');
-                document.getElementById('customTopic').required = true;
-                topicPreview.classList.remove('show');
-            } else {
-                customGroup.classList.add('hidden');
-                document.getElementById('customTopic').required = false;
-                
-                // Show topic description
-                if (this.value) {
-                    topicPreview.textContent = this.value;
-                    topicPreview.classList.add('show');
-                } else {
-                    topicPreview.classList.remove('show');
-                }
-            }
-        });
-
-        document.getElementById('sessionLength').addEventListener('change', updateTotalHours);
-        document.getElementById('frequency').addEventListener('change', updateTotalHours);
 
         // Remove the old role, challenge, motivation event listeners as they're now checkboxes
 
